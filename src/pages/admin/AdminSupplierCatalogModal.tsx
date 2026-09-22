@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { Modal, Stack, Title, Text, Group, Select, Button, Table, Badge, ActionIcon, NumberInput, Switch } from '@mantine/core'
+import { useState } from 'react'
+import { Modal, Stack, Text, Group, Select, Button, Table, Badge, ActionIcon, Switch } from '@mantine/core'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { adminApi } from '../../api'
 import { IconTrash } from '@tabler/icons-react'

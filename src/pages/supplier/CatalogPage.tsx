@@ -128,9 +128,7 @@ function ProductConfigCard({ product, queryClient }: any) {
           <Stack gap="md" mt="md">
             <Text fw={500} size="sm">Preço Padrão (Auto-lance)</Text>
             
-            <Group grow align="flex-end">
-              <NumberInput label="Preço (R$)" value={defaultPrice} onChange={setDefaultPrice} prefix="R$ " decimalScale={2} />
-            </Group>
+              <NumberInput label="Preço (R$)" value={defaultPrice} onChange={(val) => setDefaultPrice(val as number | '')} prefix="R$ " decimalScale={2} />
           </Stack>
         )}
       </Stack>
