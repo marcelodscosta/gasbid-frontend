@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3333',
+  baseURL: import.meta.env.VITE_API_URL ?? 'https://gasbid-backend-zh4b.onrender.com',
 })
 
 api.interceptors.request.use((config) => {
@@ -21,7 +21,7 @@ api.interceptors.response.use(
         if (!refreshToken) throw new Error('No refresh token available')
 
         const { data } = await axios.post(
-          `${import.meta.env.VITE_API_URL ?? 'http://localhost:3333'}/auth/refresh`,
+          `${import.meta.env.VITE_API_URL ?? 'https://gasbid-backend-zh4b.onrender.com'}/auth/refresh`,
           { refreshToken },
         )
         localStorage.setItem('@gasbid:token', data.token)
