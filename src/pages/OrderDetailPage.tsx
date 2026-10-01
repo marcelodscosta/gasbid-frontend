@@ -15,9 +15,10 @@ import {
   Grid, Stack, ThemeIcon, Flex, Timeline, ScrollArea, TextInput, ActionIcon,
 } from '@mantine/core'
 
-const STATUS_STEPS: OrderStatus[] = ['CREATED', 'CONFIRMED', 'IN_DELIVERY', 'DELIVERED']
+const STATUS_STEPS: OrderStatus[] = ['PENDING_CONFIRMATION', 'CONFIRMED', 'IN_DELIVERY', 'DELIVERED']
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
+  PENDING_CONFIRMATION: <IconAlertCircle size={14} />,
   CREATED: <IconPackage size={14} />,
   CONFIRMED: <IconCheck size={14} />,
   IN_DELIVERY: <IconTruck size={14} />,
@@ -83,6 +84,9 @@ export function OrderDetailPage() {
   const isCancelled = order.status === 'CANCELLED'
 
   function nextAction() {
+    if (order!.status === 'PENDING_CONFIRMATION' && user?.role === 'SUPPLIER') {
+      return { label: 'Aceitar Pedido (5 min)', next: 'CONFIRMED', icon: <IconCheck size={16} /> }
+    }
     if (order!.status === 'CREATED' && user?.role === 'SUPPLIER') {
       return { label: 'Confirmar pedido', next: 'CONFIRMED', icon: <IconCheck size={16} /> }
     }

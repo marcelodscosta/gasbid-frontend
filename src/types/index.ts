@@ -58,6 +58,7 @@ export type ProposalStatus =
   | 'COUNTER_OFFER'
 
 export type OrderStatus =
+  | 'PENDING_CONFIRMATION'
   | 'CREATED'
   | 'CONFIRMED'
   | 'IN_DELIVERY'

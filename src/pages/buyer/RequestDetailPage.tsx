@@ -87,7 +87,7 @@ export function RequestDetailPage() {
     )
   }
 
-  const canAccept = request.status === 'OPEN'
+  const canAccept = request.status === 'OPEN' || request.status === 'UNDER_REVIEW'
   const activeProposals = proposals.filter((p: any) => p.status !== 'WITHDRAWN' && p.status !== 'REJECTED')
 
   const handleCounterOffer = (proposalId: string) => {

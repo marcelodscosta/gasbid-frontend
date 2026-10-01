@@ -105,6 +105,12 @@ export function OpportunityDetailPage() {
     mutationFn: (data: Form) => {
       setError('')
       const deliveryDeadline = new Date(`${data.deliveryDate}T${data.deliveryTime}`).toISOString()
+
+      const buyerDeadline = new Date(request!.deadline)
+      if (new Date(deliveryDeadline) > buyerDeadline && !isCounterOffer) {
+        throw new Error(`Prazo excedido. O comprador exige entrega até ${formatDateTime(request!.deadline)}.`)
+      }
+
       return proposalsApi.create(id!, {
         items: data.items,
         freightPrice: data.freightPrice,
@@ -117,7 +123,7 @@ export function OpportunityDetailPage() {
       await refetch()
       setSuccess(true)
     },
-    onError: (err: any) => setError(err?.response?.data?.message ?? 'Erro ao enviar proposta'),
+    onError: (err: any) => setError(err?.message || err?.response?.data?.message || 'Erro ao enviar proposta'),
   })
 
   if (isLoading) {
@@ -464,7 +470,9 @@ export function OpportunityDetailPage() {
                     />
                   </Grid.Col>
                 </Grid>
-                <Text size="xs" c="dimmed" mt={4}>Você pode propor uma data diferente da expectativa do comprador se necessário.</Text>
+                <Text size="xs" c="red" mt={4} fw={500}>
+                  Limite exigido: {formatDateTime(request.deadline)}
+                </Text>
               </Box>
 
               <Grid mb="xl">

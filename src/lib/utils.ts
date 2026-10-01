@@ -48,6 +48,7 @@ export function proposalStatusBadge(status: ProposalStatus) {
 
 export function orderStatusLabel(status: OrderStatus) {
   const map: Record<OrderStatus, string> = {
+    PENDING_CONFIRMATION: 'Aguardando Seu Aceite',
     CREATED: 'Criado', CONFIRMED: 'Confirmado', IN_DELIVERY: 'Em entrega',
     DELIVERED: 'Entregue', CANCELLED: 'Cancelado',
   }
@@ -56,6 +57,7 @@ export function orderStatusLabel(status: OrderStatus) {
 
 export function orderStatusBadge(status: OrderStatus) {
   const map: Record<OrderStatus, string> = {
+    PENDING_CONFIRMATION: 'badge-red',
     CREATED: 'badge-blue', CONFIRMED: 'badge-orange', IN_DELIVERY: 'badge-yellow',
     DELIVERED: 'badge-green', CANCELLED: 'badge-red',
   }
