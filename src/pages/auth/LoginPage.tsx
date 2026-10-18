@@ -59,9 +59,7 @@ export function LoginPage() {
 
       <Paper withBorder shadow="md" p="xl" radius="md" w="100%" maw={420} bg="var(--mantine-color-default)">
         <Group justify="center" mb="md">
-          <Box style={{ width: 42, height: 42, background: '#f97316', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, boxShadow: '0 0 16px rgba(249,115,22,0.3)' }}>
-            🔥
-          </Box>
+          <img src="/logo.png" alt="GasBid" width={42} height={42} style={{ borderRadius: 10, display: 'block' }} />
         </Group>
         
         <Box ta="center" mb="xl">

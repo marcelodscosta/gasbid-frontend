@@ -108,18 +108,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
                 size="sm"
               />
               <Group gap={10} visibleFrom="sm">
-                <Box
-                  style={{
-                    width: 34, height: 34,
-                    background: '#f97316',
-                    borderRadius: 8,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 18,
-                    boxShadow: '0 0 16px rgba(249,115,22,0.3)',
-                  }}
-                >
-                  🔥
-                </Box>
+                <img src="/logo.png" alt="GasBid" width={34} height={34} style={{ borderRadius: 8, display: 'block' }} />
                 <Text fw={800} size="lg" style={{ letterSpacing: '-0.03em' }}>
                   Gas<Text component="span" c="gasbidOrange">Bid</Text>
                 </Text>
@@ -225,17 +214,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
               mb="xs"
               style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}
             >
-              <Box
-                style={{
-                  width: 30, height: 30,
-                  background: '#f97316',
-                  borderRadius: 7,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 16,
-                }}
-              >
-                🔥
-              </Box>
+              <img src="/logo.png" alt="GasBid" width={30} height={30} style={{ borderRadius: 7, display: 'block' }} />
               <Text fw={800} size="md" style={{ letterSpacing: '-0.03em' }}>
                 Gas<Text component="span" c="gasbidOrange">Bid</Text>
               </Text>
