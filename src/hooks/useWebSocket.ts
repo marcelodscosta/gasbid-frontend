@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
+import { notifications } from '@mantine/notifications'
 import { useAuth } from '../contexts/AuthContext'
 
 export function useWebSocket(onEvent?: (event: string, payload: any) => void) {
@@ -58,6 +59,26 @@ export function useWebSocket(onEvent?: (event: string, payload: any) => void) {
               queryClient.invalidateQueries({ queryKey: ['buyer-request', data.payload.buyerRequestId] })
               queryClient.invalidateQueries({ queryKey: ['opportunity', data.payload.buyerRequestId] })
             }
+          }
+          if (data.event === 'SUPPLIER_LOCATION' || data.event === 'SUPPLIER_OFFLINE') {
+            window.dispatchEvent(new CustomEvent('gasbid:supplier-location', { detail: data.payload }))
+          }
+          if (data.event === 'PROPOSAL_UPDATED' || data.event === 'PROPOSAL_OUTBID' || data.event === 'REQUEST_REOPENED') {
+            queryClient.invalidateQueries({ queryKey: ['buyer-requests'] })
+            queryClient.invalidateQueries({ queryKey: ['my-proposals'] })
+            queryClient.invalidateQueries({ queryKey: ['opportunities'] })
+            const id = data.payload?.buyerRequestId ?? data.payload?.requestId
+            if (id) {
+              queryClient.invalidateQueries({ queryKey: ['buyer-request', id] })
+              queryClient.invalidateQueries({ queryKey: ['opportunity', id] })
+            }
+            const msg: Record<string, [string, string]> = {
+              PROPOSAL_UPDATED: ['Proposta atualizada', 'Um revendedor atualizou o preço da proposta.'],
+              PROPOSAL_OUTBID: ['Sua proposta foi superada', 'Outro revendedor ofereceu um valor menor. Ajuste sua proposta para voltar a liderar.'],
+              REQUEST_REOPENED: ['Cotação reaberta', 'O fornecedor não confirmou o pedido. Escolha outra proposta.'],
+            }
+            const [title, message] = msg[data.event]
+            notifications.show({ title, message, color: data.event === 'PROPOSAL_OUTBID' ? 'orange' : 'blue' })
           }
           if (data.event) {
             onEvent?.(data.event, data.payload)

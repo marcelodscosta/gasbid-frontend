@@ -8,7 +8,7 @@ import {
 import { useDisclosure } from '@mantine/hooks'
 import {
   IconLayoutDashboard, IconShoppingCart, IconTrendingUp,
-  IconBell, IconLogout, IconSun, IconMoon, IconCircleFilled
+  IconBell, IconUser, IconLogout, IconSun, IconMoon, IconCircleFilled
 } from '@tabler/icons-react'
 import { useQuery } from '@tanstack/react-query'
 
@@ -20,12 +20,14 @@ import { opportunitiesApi, proposalsApi, buyerRequestsApi, ordersApi } from '../
 const buyerNav = [
   { to: '/dashboard', label: 'Dashboard', icon: IconLayoutDashboard, end: true },
   { to: '/requests', label: 'Compras', icon: IconShoppingCart, end: false },
+  { to: '/profile', label: 'Perfil', icon: IconUser, end: false },
 ]
 
 const supplierNav = [
   { to: '/dashboard', label: 'Dashboard', icon: IconLayoutDashboard, end: true },
   { to: '/sales', label: 'Vendas', icon: IconTrendingUp, end: false },
   { to: '/catalog', label: 'Catálogo', icon: IconShoppingCart, end: false },
+  { to: '/profile', label: 'Perfil', icon: IconUser, end: false },
 ]
 
 interface AlertPayload {

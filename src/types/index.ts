@@ -15,6 +15,10 @@ export interface Company {
   phone?: string
   email?: string
   active: boolean
+  trackingEnabled?: boolean
+  ratingAvg?: number | null
+  ratingCount?: number
+  addresses?: Address[]
 }
 
 export interface Address {
@@ -73,6 +77,8 @@ export interface BuyerRequestItem {
   product: Product
 }
 
+export type PaymentMethod = 'PIX' | 'CASH' | 'CREDIT' | 'DEBIT' | 'BOLETO'
+
 export interface BuyerRequest {
   id: string
   buyerCompanyId: string
@@ -80,6 +86,7 @@ export interface BuyerRequest {
   deadline: string
   expiresAt: string
   observations?: string
+  paymentMethod?: PaymentMethod | null
   status: BuyerRequestStatus
   createdAt: string
   items: BuyerRequestItem[]
@@ -141,6 +148,7 @@ export interface Order {
   buyerCompany?: Pick<Company, 'id' | 'name'>
   supplierCompany?: Pick<Company, 'id' | 'name'>
   timeline?: OrderTimeline[]
+  rating?: { stars: number; comment?: string | null } | null
 }
 
 export interface OrderTimeline {

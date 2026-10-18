@@ -1,3 +1,4 @@
+import { ProfilePage } from './pages/ProfilePage'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
@@ -128,6 +129,15 @@ export function App() {
               element={
                 <PrivateRoute roles={['BUYER', 'SUPPLIER']}>
                   <AppLayout><OrderDetailPage /></AppLayout>
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute roles={['BUYER', 'SUPPLIER']}>
+                  <AppLayout><ProfilePage /></AppLayout>
                 </PrivateRoute>
               }
             />

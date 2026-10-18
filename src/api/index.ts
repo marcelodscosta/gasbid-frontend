@@ -90,6 +90,21 @@ export const ordersApi = {
     api.get<any[]>(`/orders/${id}/messages`).then(r => r.data),
   sendMessage: (id: string, content: string) =>
     api.post<any>(`/orders/${id}/messages`, { content }).then(r => r.data),
+  rate: (id: string, stars: number, comment?: string) =>
+    api.post(`/orders/${id}/rate`, { stars, comment }).then(r => r.data),
+  tracking: (id: string) =>
+    api.get<{
+      orderId: string
+      trackingEnabled: boolean
+      online: boolean
+      location: { latitude: number; longitude: number; heading?: number | null; speed?: number | null; updatedAt: string } | null
+    }>(`/orders/${id}/tracking`).then(r => r.data),
+}
+
+// Tracking (Supplier)
+export const trackingApi = {
+  setEnabled: (enabled: boolean) =>
+    api.put<{ id: string; trackingEnabled: boolean }>('/tracking/settings', { enabled }).then(r => r.data),
 }
 
 // Admin
@@ -113,4 +128,10 @@ export const adminApi = {
 export const supplierProductsApi = {
   listMyProducts: () => api.get<any[]>('/supplier/products').then(r => r.data),
   updateProduct: (supplierProductId: string, data: any) => api.put<any>(`/supplier/products/${supplierProductId}`, data).then(r => r.data),
+}
+
+// Settings (leitura pública para usuários autenticados)
+export const settingsApi = {
+  proposalWindow: () =>
+    api.get<{ proposalWindowMinutes: number }>('/settings/proposal-window').then(r => r.data),
 }

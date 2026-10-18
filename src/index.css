@@ -59,3 +59,32 @@ body {
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* ─── Polimento visual ─── */
+[data-mantine-color-scheme='light'] body { background: #f6f7f9; }
+[data-mantine-color-scheme='dark'] body { background: #0f1218; }
+
+.mantine-Card-root[data-with-border] { border-color: var(--mantine-color-default-border); }
+a > .mantine-Card-root:hover,
+.mantine-Card-root[role='link']:hover,
+.card-hover:hover {
+  box-shadow: var(--mantine-shadow-md);
+  transform: translateY(-1px);
+  border-color: rgba(249, 115, 22, 0.45);
+}
+
+.mantine-Button-root:active:not([data-disabled]) { transform: translateY(1px); }
+
+.mantine-Table-th {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mantine-color-dimmed);
+  font-weight: 600;
+}
+
+:focus-visible { outline: 2px solid rgba(249, 115, 22, 0.6); outline-offset: 2px; }
+
+/* Leaflet dentro do Mantine */
+.leaflet-container { font-family: inherit; z-index: 0; }

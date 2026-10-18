@@ -86,3 +86,15 @@ export function mantineBadgeColor(badgeClass: string): string {
   if (badgeClass.includes('blue')) return 'blue';
   return 'gray';
 }
+
+export const PAYMENT_OPTIONS = [
+  { value: 'PIX', label: 'Pix' },
+  { value: 'CASH', label: 'Dinheiro' },
+  { value: 'CREDIT', label: 'Cartão de crédito' },
+  { value: 'DEBIT', label: 'Cartão de débito' },
+  { value: 'BOLETO', label: 'Boleto' },
+]
+
+export function paymentLabel(method?: string | null) {
+  return PAYMENT_OPTIONS.find(o => o.value === method)?.label ?? '—'
+}

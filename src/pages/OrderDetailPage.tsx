@@ -4,12 +4,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../contexts/AuthContext'
 import { ordersApi } from '../api'
 import {
-  formatCurrency, formatDateTime,
+  formatCurrency, formatDateTime, paymentLabel,
   orderStatusLabel, orderStatusBadge,
   mantineBadgeColor
 } from '../lib/utils'
 import { IconArrowLeft, IconCheck, IconX, IconTruck, IconPackage, IconAlertCircle, IconSend } from '@tabler/icons-react'
 import type { OrderStatus } from '../types'
+import { LiveTracking } from '../components/order/LiveTracking'
+import { OrderRating } from '../components/order/OrderRating'
 import {
   Box, Group, Title, Text, Button, Card, Badge, Table, Alert,
   Grid, Stack, ThemeIcon, Flex, Timeline, ScrollArea, TextInput, ActionIcon,
@@ -91,7 +93,7 @@ export function OrderDetailPage() {
       return { label: 'Marcar em entrega', next: 'IN_DELIVERY', icon: <IconTruck size={16} /> }
     }
     if (order!.status === 'IN_DELIVERY' && user?.role === 'BUYER') {
-      return { label: 'Marcar como entregue', next: 'DELIVERED', icon: <IconCheck size={16} /> }
+      return { label: 'Confirmar recebimento', next: 'DELIVERED', icon: <IconCheck size={16} /> }
     }
     return null
   }
@@ -123,6 +125,9 @@ export function OrderDetailPage() {
       <Grid>
         <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="xl">
+            {/* Rastreamento ao vivo (comprador, durante a entrega) */}
+            {order.status === 'IN_DELIVERY' && user?.role !== 'SUPPLIER' && <LiveTracking orderId={order.id} />}
+
             {/* Items Card */}
             <Card withBorder radius="md" p="md">
               <Title order={4} size="h5" mb="md">Produtos do pedido</Title>
@@ -166,6 +171,9 @@ export function OrderDetailPage() {
               <Box mt="xl">
                 <Text size="sm" c="dimmed" mb={4}><Text component="span" fw={600} c="var(--mantine-color-text)">Endereço de entrega:</Text> {order.buyerRequest?.address?.street}, {order.buyerRequest?.address?.number} — {order.buyerRequest?.address?.city}/{order.buyerRequest?.address?.state}</Text>
                 <Text size="sm" c="dimmed" mb={4}><Text component="span" fw={600} c="var(--mantine-color-text)">Previsão de entrega:</Text> {order.proposal?.deliveryDeadline ? formatDateTime(order.proposal.deliveryDeadline) : 'N/A'}</Text>
+                {order.buyerRequest?.paymentMethod && (
+                  <Text size="sm" c="dimmed" mb={4}><Text component="span" fw={600} c="var(--mantine-color-text)">Forma de pagamento:</Text> {paymentLabel(order.buyerRequest.paymentMethod)}</Text>
+                )}
                 {order.proposal?.paymentTerms && (
                   <Text size="sm" c="dimmed"><Text component="span" fw={600} c="var(--mantine-color-text)">Condições de Pagamento:</Text> {order.proposal.paymentTerms}</Text>
                 )}
@@ -244,6 +252,18 @@ export function OrderDetailPage() {
                     )
                   })}
                 </Stack>
+              </Card>
+            )}
+
+            {/* Avaliação */}
+            {order.status === 'DELIVERED' && user?.role === 'BUYER' && (
+              <OrderRating orderId={order.id} supplierName={order.supplierCompany?.name} rating={order.rating} />
+            )}
+            {order.status === 'DELIVERED' && user?.role === 'SUPPLIER' && order.rating && (
+              <Card withBorder radius="md" p="md">
+                <Title order={4} size="h5" mb="xs">Avaliação do cliente</Title>
+                <Text fw={700} size="xl">{'★'.repeat(order.rating.stars)}<Text component="span" c="dimmed">{'★'.repeat(5 - order.rating.stars)}</Text></Text>
+                {order.rating.comment && <Text size="sm" c="dimmed" mt="xs">“{order.rating.comment}”</Text>}
               </Card>
             )}
 

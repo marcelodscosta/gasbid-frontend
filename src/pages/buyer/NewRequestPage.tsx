@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { productsApi, addressesApi, buyerRequestsApi } from '../../api'
+import { productsApi, addressesApi, buyerRequestsApi, settingsApi } from '../../api'
 import { useAuth } from '../../contexts/AuthContext'
+import { PAYMENT_OPTIONS } from '../../lib/utils'
 import {
   IconAlertCircle, IconArrowLeft, IconPlus, IconTrash,
   IconShoppingCart, IconCalendar, IconClock
@@ -20,8 +21,7 @@ const schema = z.object({
   addressId: z.string().min(1, 'Selecione um endereço'),
   deadlineDate: z.string().min(1, 'Informe a data de entrega'),
   deadlineTime: z.string().min(1, 'Informe o horário'),
-  expiresAtDate: z.string().min(1, 'Informe a data limite'),
-  expiresAtTime: z.string().min(1, 'Informe o horário'),
+  paymentMethod: z.enum(['PIX', 'CASH', 'CREDIT', 'DEBIT', 'BOLETO']),
   observations: z.string().optional(),
 })
 type Form = z.infer<typeof schema>
@@ -52,25 +52,30 @@ export function NewRequestPage() {
     enabled: !!user?.companyId,
   })
 
+  const { data: settings } = useQuery({
+    queryKey: ['proposal-window'],
+    queryFn: () => settingsApi.proposalWindow().catch(() => ({ proposalWindowMinutes: 5 })),
+    staleTime: 5 * 60_000,
+  })
+  const windowMinutes = settings?.proposalWindowMinutes ?? 5
+
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<Form>({
     resolver: zodResolver(schema) as any,
     defaultValues: {
       deadlineTime: '08:00',
-      expiresAtTime: '18:00',
+      paymentMethod: 'PIX',
     }
   })
 
   const mutation = useMutation({
     mutationFn: (data: Form) => {
       const deadline = new Date(`${data.deadlineDate}T${data.deadlineTime}`).toISOString()
-      const expiresAt = new Date(`${data.expiresAtDate}T${data.expiresAtTime}`).toISOString()
-      
       return buyerRequestsApi.create({
         addressId: data.addressId,
         observations: data.observations,
         items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
+        paymentMethod: data.paymentMethod,
         deadline,
-        expiresAt,
       })
     },
     onSuccess: (result) => navigate(`/requests/${result.id}`),
@@ -165,28 +170,20 @@ export function NewRequestPage() {
                     </Grid>
                   </Box>
 
-                  <Box>
-                    <Text size="sm" fw={500} mb={4}>Data limite para propostas <Text component="span" c="red">*</Text></Text>
-                    <Grid>
-                      <Grid.Col span={8}>
-                        <TextInput
-                          type="date"
-                          min={todayStr}
-                          leftSection={<IconCalendar size={16} />}
-                          {...register('expiresAtDate')}
-                          error={errors.expiresAtDate?.message}
-                        />
-                      </Grid.Col>
-                      <Grid.Col span={4}>
-                        <TextInput
-                          type="time"
-                          leftSection={<IconClock size={16} />}
-                          {...register('expiresAtTime')}
-                          error={errors.expiresAtTime?.message}
-                        />
-                      </Grid.Col>
-                    </Grid>
-                  </Box>
+                  <Select
+                    label="Forma de pagamento"
+                    withAsterisk
+                    data={PAYMENT_OPTIONS}
+                    defaultValue="PIX"
+                    allowDeselect={false}
+                    error={errors.paymentMethod?.message}
+                    onChange={(val) => register('paymentMethod').onChange({ target: { name: 'paymentMethod', value: val } })}
+                  />
+
+                  <Alert color="blue" variant="light" icon={<IconClock size={16} />}>
+                    Os revendedores terão {windowMinutes} minutos para enviar propostas depois que você publicar. Você acompanha tudo em tempo real.
+                  </Alert>
+
 
                   <Textarea
                     label="Observações"
