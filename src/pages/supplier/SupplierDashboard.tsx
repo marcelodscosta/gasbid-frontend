@@ -23,7 +23,7 @@ function SupplierLiveChatWidget() {
     queryKey: ['supplier-active-orders-chat'],
     queryFn: async () => {
       const res = await ordersApi.list({ limit: 20 })
-      return (res?.data || []).filter((o: any) => ['CREATED', 'CONFIRMED', 'IN_DELIVERY'].includes(o.status))
+      return (res?.data || []).filter((o: any) => ['PENDING_CONFIRMATION', 'CONFIRMED', 'IN_DELIVERY'].includes(o.status))
     },
     refetchInterval: 5000,
   })

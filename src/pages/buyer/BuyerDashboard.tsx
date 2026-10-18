@@ -69,7 +69,7 @@ export function BuyerDashboard() {
     }
   })
 
-  const activeOrder = orders.find(o => ['CREATED', 'CONFIRMED', 'IN_DELIVERY'].includes(o.status))
+  const activeOrder = orders.find(o => ['PENDING_CONFIRMATION', 'CONFIRMED', 'IN_DELIVERY'].includes(o.status))
 
   return (
     <Box>

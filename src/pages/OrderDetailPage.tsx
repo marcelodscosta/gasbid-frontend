@@ -87,9 +87,6 @@ export function OrderDetailPage() {
     if (order!.status === 'PENDING_CONFIRMATION' && user?.role === 'SUPPLIER') {
       return { label: 'Aceitar Pedido (5 min)', next: 'CONFIRMED', icon: <IconCheck size={16} /> }
     }
-    if (order!.status === 'CREATED' && user?.role === 'SUPPLIER') {
-      return { label: 'Confirmar pedido', next: 'CONFIRMED', icon: <IconCheck size={16} /> }
-    }
     if (order!.status === 'CONFIRMED' && user?.role === 'SUPPLIER') {
       return { label: 'Marcar em entrega', next: 'IN_DELIVERY', icon: <IconTruck size={16} /> }
     }
@@ -251,7 +248,7 @@ export function OrderDetailPage() {
             )}
 
             {/* Actions */}
-            {(canAct && (action || (user?.role === 'BUYER' && (order.status === 'CREATED' || order.status === 'CONFIRMED')))) && (
+            {(canAct && (action || (user?.role === 'BUYER' && (order.status === 'PENDING_CONFIRMATION' || order.status === 'CONFIRMED')))) && (
               <Card withBorder radius="md" p="md">
                 <Title order={4} size="h5" mb="md">Ações</Title>
                 {action && (
@@ -266,7 +263,7 @@ export function OrderDetailPage() {
                     {action.label}
                   </Button>
                 )}
-                {(order.status === 'CREATED' || order.status === 'CONFIRMED') && user?.role === 'BUYER' && (
+                {(order.status === 'PENDING_CONFIRMATION' || order.status === 'CONFIRMED') && user?.role === 'BUYER' && (
                   <Button
                     fullWidth
                     color="red"
@@ -281,7 +278,7 @@ export function OrderDetailPage() {
                     Cancelar pedido
                   </Button>
                 )}
-                {order.status === 'CREATED' && user?.role === 'SUPPLIER' && (
+                {order.status === 'PENDING_CONFIRMATION' && user?.role === 'SUPPLIER' && (
                   <Button
                     fullWidth
                     variant="light"
